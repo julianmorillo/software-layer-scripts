@@ -1154,6 +1154,14 @@ def pre_configure_hook_extrae(self, *args, **kwargs):
             raise EasyBuildError("Failed to isolate path for binutils libraries using %s, got %s",
                                  binutils_lib_path_glob_pattern, binutils_lib_path)
 
+        binutils_bin_path_glob_pattern = os.path.join(eprefix, 'usr', 'bin')
+        binutils_bin_path = glob.glob(binutils_bin_path_glob_pattern)
+        if len(binutils_bin_path) == 1:
+            self.cfg.update('configopts', '--with-binutils-binaries=' + binutils_bin_path[0])
+        else:
+            raise EasyBuildError("Failed to isolate path for binutils binaries using %s, got %s",
+                                 binutils_bin_path_glob_pattern, binutils_bin_path)
+
         # zlib is a filtered dependency, so we need to manually specify it's location to avoid the host version
         self.cfg.update('configopts', '--with-libz=' + eprefix)
 
